@@ -1,0 +1,17 @@
+o1 = Object [(Label "l", Method (Var "x")  (Call (SigmaVar (Var "x")) (Label "l")))]
+o2 = Object [(Label "l", Method (Var "x")  (SigmaVar (Var "x")))]
+o3 = Object [(Label "l", Method (Var "y")  (Update (SigmaVar (Var "y")) (Label "l") (Method (Var "x") (SigmaVar (Var "x")))))]
+p1 = Call o1 (Label "l")
+p2 = Call o2 (Label "l")
+p3 = Call o3 (Label "l")
+a2 = execute p2
+a3 = execute p3
+a2 == o2
+a3 == o2
+vtrue = Object [(Label "if", Method (Var "x")  (Call (SigmaVar (Var "x")) (Label "then"))), (Label "then", Method (Var "x")  (Call (SigmaVar (Var "x")) (Label "then"))), (Label "else", Method (Var "x")  (Call (SigmaVar (Var "x")) (Label "else")))]
+vfalse = Object [(Label "if", Method (Var "x")  (Call (SigmaVar (Var "x")) (Label "else"))), (Label "then", Method (Var "x")  (Call (SigmaVar (Var "x")) (Label "then"))), (Label "else", Method (Var "x")  (Call (SigmaVar (Var "x")) (Label "else")))]
+cond b c d = Call (Update (Update b (Label "then") (Method (Var "_") c)) (Label "else") (Method (Var "_") d)) (Label "if")
+if1 = cond vtrue vfalse vtrue
+(execute if1) == vfalse
+if2 = cond vfalse vfalse vtrue
+(execute if2) == vtrue
